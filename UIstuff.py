@@ -12,14 +12,15 @@ class UIInsertionsort:
         col1, col2, col3, col4, col5 = st.columns((1, 1, 1, 1, 1))
         columnlist = [col1, col2, col3, col4, col5]
         if 'buttonarray' not in st.session_state:
-            st.session_state['buttonarray'] = np.zeros(6, dtype=bool)
+            st.session_state['buttonarray'] = np.zeros(5, dtype=bool)
 
-        mystate = st.session_state['buttonarray']
-        buttonvalues = np.zeros(6, dtype=bool)
+
+        buttonvalues = np.zeros(5, dtype=bool)
+        st.write("Sessions", st.session_state['buttonarray'])
 
         for i in range(1, 6):
             buttonvalues[i-1] = (columnlist[i-1].button("⠀" + str(i) + "⠀"))
 
-        newarray = np.logical_or(mystate, buttonvalues)
-        st.write(newarray)
+        st.session_state['buttonarray'] = np.logical_or(st.session_state['buttonarray'], buttonvalues)
+        st.write(st.session_state['buttonarray'])
 
