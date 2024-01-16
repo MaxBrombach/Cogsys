@@ -12,6 +12,8 @@ class UIInsertionsort:
     def createButtonArray(self):
         col1, col2, col3, col4, col5 = st.columns((1, 1, 1, 1, 1))
         columnlist = [col1, col2, col3, col4, col5]
+
+        #initialisiere session state
         if 'buttonarray' not in st.session_state:
             st.session_state['buttonarray'] = np.zeros(5, dtype=bool)
 
@@ -23,6 +25,7 @@ class UIInsertionsort:
 
         st.session_state['buttonarray'] = np.logical_or(st.session_state['buttonarray'], buttonvalues)
         st.write(st.session_state['buttonarray'])
+
 
         if st.button("Tausche"):
             self.tauschearray(st.session_state['buttonarray'])
