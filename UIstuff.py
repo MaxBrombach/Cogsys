@@ -1,9 +1,10 @@
 import streamlit as st
 import numpy as np
-from numpy.core._multiarray_umath import dtype
+import Notification
 
 
 class UIInsertionsort:
+    no = Notification.Notification()
 
     def __init__(self):
         if 'startarray' not in st.session_state:
@@ -26,6 +27,10 @@ class UIInsertionsort:
         st.session_state['buttonarray'] = np.logical_or(st.session_state['buttonarray'], buttonvalues)
         st.write(st.session_state['buttonarray'])
 
+        # Test Notifications
+        self.no.custom_info("this is an info")
+        self.no.custom_warning("this is a warning")
+        self.no.custom_error("this is an error")
 
         if st.button("Tausche"):
             self.tauschearray(st.session_state['buttonarray'])
