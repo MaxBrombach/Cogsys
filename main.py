@@ -10,7 +10,7 @@ import UIstuff
 if __name__ == '__main__':
 
     #streamlit run main.py
-    st.title("Insertion Sort")
+    #st.title("Insertion Sort")
     UI = UIstuff.UIInsertionsort()
     UI.createButtonArray()
 

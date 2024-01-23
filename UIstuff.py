@@ -12,19 +12,19 @@ class UIInsertionsort:
 
 
     def __init__(self):
-
         self.no = Notification.Notification()
         self.logic = logic.Logic()
         self.tutor = TutorModel.TutorModel()
-        if 'startarray' not in st.session_state:
-            st.session_state['startarray'] = [2, 4, 3, 8, 7]
+        self.initializeSessionstates()
+
 
     def initializeSessionstates(self):
         if 'alreadypressed' not in st.session_state:
+            st.session_state['startarray'] = [2, 4, 3, 8, 7]
+            st.session_state['sortareaindex'] = 0
             st.session_state['alreadypressed'] = False
 
     def createButtonArray(self):
-        self.initializeSessionstates()
         col1, col2, col3, col4, col5 = st.columns((1, 1, 1, 1, 1))
         columnlist = [col1, col2, col3, col4, col5]
 
@@ -35,10 +35,10 @@ class UIInsertionsort:
         buttonvalues = np.zeros(5, dtype=bool)
 
         for i in range(5):
-            if True:
+            if i > st.session_state['sortareaindex']:
                 buttonvalues[i] = (columnlist[i].button("⠀" + str(st.session_state['startarray'][i]) + "⠀"))
             else:
-                buttonvalues[i] = (columnlist[i].button("⠀" + str(st.session_state['startarray'][i]) + "⠀"))
+                buttonvalues[i] = (columnlist[i].button("<" + str(st.session_state['startarray'][i]) + ">"))
 
         st.session_state['buttonarray'] = np.logical_or(st.session_state['buttonarray'], buttonvalues)
 
@@ -56,11 +56,11 @@ class UIInsertionsort:
                     #call dialog
                     pass
 
-
-
         if col2.button("Nein"):
             if self.logic.iscorrect():
-                pass
+                #increase sortedarea
+                st.session_state['sortareaindex'] += 1
+                st.rerun()
             else:
                 self.no.custom_error()
 
@@ -70,9 +70,6 @@ class UIInsertionsort:
     def tauschearray(self):
 
         trueindx = np.where(st.session_state['buttonarray'])[0]
-        print(trueindx)
-
-        print(st.session_state['startarray'])
         temp = st.session_state['startarray'][trueindx[0]]
         st.session_state['startarray'][trueindx[0]] = st.session_state['startarray'][trueindx[1]]
         st.session_state['startarray'][trueindx[1]] = temp
@@ -93,10 +90,19 @@ class UIInsertionsort:
         st.session_state['buttonarray'] = np.zeros(5, dtype=bool)
 
     def openTauschDialog(self):
-        self.no.custom_info("Welche zwei Zahlen müssen getauscht werden")
+        st.info("Tausche bis die Zahl korrekt eingeordnet ist")
         if st.button("Tauschen"):
             if self.tutor.isSwapValid():
                 self.tauschearray()
+
+        if st.button("Korrekt eingeordnet?"):
+            if self.tutor.isatCorrectPosition():
+                #wenn korrekt sortedarea wird inkrementiert
+                st.session_state['sortareaindex'] += 1
+
+
+
+
 
 
 

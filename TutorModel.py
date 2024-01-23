@@ -15,3 +15,6 @@ class TutorModel:
         """
 
         return True
+
+    def isatCorrectPosition(self):
+        return True
