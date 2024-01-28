@@ -94,6 +94,8 @@ class UIInsertionsort:
         if st.button("Tauschen"):
             if self.tutor.isSwapValid():
                 self.tauschearray()
+            else:
+                pass
 
         if st.button("Korrekt eingeordnet?"):
             if self.tutor.isatCorrectPosition():

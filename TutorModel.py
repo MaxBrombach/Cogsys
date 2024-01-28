@@ -1,11 +1,15 @@
+import numpy as np
 
+import Usermodel
 
 class TutorModel:
 
     def __init__(self):
-        pass
+        self.usmodel = Usermodel.Usermodel()
 
-    def handlestuff(self, param = "EGALkp"):
+
+    #def handlestuff(self, buttonsclicked: np.array() = [], currentarray: np.array() = []):
+    def handlestuff(self):
         pass
 
     def isSwapValid(self):
