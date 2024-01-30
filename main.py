@@ -36,6 +36,7 @@ def main_page():
 
     if explanation_button:
         explanation()
+
     if exercise_button or st.session_state['exercisestart']:
         st.session_state['exercisestart'] = True
         exercise()
