@@ -36,7 +36,10 @@ def main_page():
 
     if explanation_button:
         explanation()
-    if exercise_button:
+
+    if not st.session_state.get('button'):
+        st.session_state['button'] = exercise_button
+    if st.session_state['button']:
         exercise()
 
 
