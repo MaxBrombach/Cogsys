@@ -11,7 +11,8 @@ class TutorModel:
     def noSwapNeeded(self):
         st.session_state['userModel'].increaseAttempt()
         if st.session_state['userModel'].maxTriesachieved():
-
+            #TODO was passiert wenn er komplett verkackt -> maxtries überschreitet
+            # implement logic
             pass
         else:
             st.error("Es darf nicht getauscht werden")
@@ -19,6 +20,8 @@ class TutorModel:
     def swapNeeded(self):
         st.session_state['userModel'].increaseAttempt()
         if st.session_state['userModel'].maxTriesachieved():
+            # TODO was passiert wenn er komplett verkackt -> maxtries überschreitet
+            #  implement logic
             pass
         else:
             st.error("Es muss getauscht werden")
