@@ -8,8 +8,8 @@ class TutorModel:
     def __init__(self):
         if 'userModel' not in st.session_state:
             st.session_state['userModel'] = Usermodel.Usermodel()
-        if 'updatedIndex' not in st.session_state:
-            st.session_state['updatedIndex'] = 0
+        #if 'updatedIndex' not in st.session_state:
+        #    st.session_state['updatedIndex'] = 0
 
     def noSwapNeeded(self):
         st.session_state['userModel'].increaseAttempt()
@@ -31,25 +31,23 @@ class TutorModel:
 
     def isSwapValid(self, selectedIndex1, selectedIndex2, currentIndex, currentList):
         newList = currentList
-        # keep track of the new index while comparing the list from the current element to the first element smaller than new element
-        if st.session_state['updatedIndex'] == 0:
-            st.session_state['updatedIndex'] = currentIndex
 
-        # todo handle wrongly selected indexes
-        indexToCompare = st.session_state['updatedIndex']
+        print("index1: " + str(selectedIndex1) + " index2: " + str(selectedIndex2) + " current: " + str(currentIndex))
+        print("Momentane Liste: " + str(newList))
 
         # check if the start of list was reached
-        if newList[indexToCompare] == 0:
-            st.session_state['updatedIndex'] = 0
-            raise CustomExceptions.StartOfListIsReached
-        elif newList[currentIndex] > newList[indexToCompare+1]:
-            st.session_state['updatedIndex'] = indexToCompare - 1
-            return True
+        if newList[currentIndex] == 0:
+            return "beginning of list"
+        if selectedIndex1 != currentIndex:
+            print("Shit goes wrong here")
+            return "wrong swap"
+        elif newList[selectedIndex1] > newList[selectedIndex2]:
+            return "True"
 
         elif st.session_state['userModel'].maxTriesachieved():
-            raise CustomExceptions.WrongSwapAfterMaxTries
+            raise "wrong swap max"
         else:
-            raise CustomExceptions.WrongSwapException
+            return "wrong swap"
 
     def isAtCorrectPosition(self, currentIndex, currentArray):
         if currentIndex == 0:

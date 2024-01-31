@@ -25,6 +25,9 @@ class UIInsertionsort:
             st.session_state['alreadypressed'] = False
             st.session_state['buttonarray'] = np.zeros(5, dtype=bool)
             st.session_state['orderingprocess'] = False
+            st.session_state['updatedIndex'] = -1
+            st.session_state['selectedIndex1'] = -1
+            st.session_state['selectedIndex2'] = -1
 
     def createButtonArray(self):
         col1, col2, col3, col4, col5 = st.columns((1, 1, 1, 1, 1))
@@ -62,8 +65,11 @@ class UIInsertionsort:
 
         # if user needs help to know which number he currently needs to sort
         # todo Refactor into notifications
-        if col3.button("Which number do i need to sort next?"):
-            col4.info("You have to sort the number at position " + str(st.session_state['sortareaindex']))
+        if col3.button("Welche Zahl soll ich sortieren?"):
+            if st.session_state['sortareaindex'] == 0:
+                col4.info("Du muss die Zahl an folgender Position sortieren: " + str(st.session_state['sortareaindex'] + 2)+ " (Die 1. Zahl wird als sortiert angesehen :) )")
+            else:
+                col4.info("Du muss die Zahl an folgender Position sortieren: " + str(st.session_state['sortareaindex'] +2))
 
 
     def tauschearray(self):
@@ -91,32 +97,79 @@ class UIInsertionsort:
         st.info("Tausche bis die Zahl korrekt eingeordnet ist")
         st.session_state['orderingprocess'] = True
 
+
+        # Variablen initiieren
+        # -------------------------------------------------------------------------------------------------------------
         # Die Liste, die wir betrachten um die neue Zahl an die neue Stelle zu ordnen
         currentArray = st.session_state['startarray']
         # Die der index des "sortierten" bereiches (zahl vor der neu zu sortierenden Zahl)
         currentIndex = st.session_state['sortareaindex']
         ordingprocess = st.session_state
-        selectedIndex1 = 0
-        selectedIndex2 = 0
 
+        # schaut, welches element nach noch verglichen werden muss in der liste (i--)
+        # zum anfang schauen wir uns die aktuelle position an
+        # danach wird dies reduziert um das vergleichen zu ermöglichen
 
+        if st.session_state['updatedIndex'] == -1:
+            st.session_state['updatedIndex'] = currentIndex
+
+        updatedIndex = st.session_state['updatedIndex']
+
+        # -------------------------------------------------------------------------------------------------------------
+
+        # Wählen / neu wählen der Elemente durch klicken
+        # -------------------------------------------------------------------------------------------------------------
+        trueindx = np.where(st.session_state['buttonarray'])[0]
+
+        #print(trueindx)
+
+        if len(trueindx) == 2:
+            st.session_state['selectedIndex1'] = trueindx[0]
+            st.session_state['selectedIndex2'] = trueindx[1]
+
+        selectedindex1 = st.session_state['selectedIndex1']
+        selectedindex2 = st.session_state['selectedIndex2']
+
+        # Ausgabe der momentan gewählten Zahlen (zum debuggen)
+        if selectedindex1 == -1 or selectedindex2 == -1:
+            st.info('Wähle 2 Zahlen zum Tauschen')
+        else:
+            st.info("Choice: Stelle1 = " + str(selectedindex1) + " und Stelle2 = "+ str(selectedindex2))
+        # -------------------------------------------------------------------------------------------------------------
+
+        if len(trueindx) == 2:
+            if st.button("Zahlen neu wählen"):
+                self.resetButtonarray()
+                st.session_state['selectedIndex1'] = -1
+                st.session_state['selectedIndex2'] = -1
+                st.rerun()
+
+        #Tauschprozess 'nach vorne'
+        # -------------------------------------------------------------------------------------------------------------
         if st.button("Tauschen"):
             # checken, ob der user ueerhaupt die zahlen geklickt hat
             trueindx = np.where(st.session_state['buttonarray'])[0]
-            if len(trueindx) == 0:
-                st.info("Choose 2 numbers by clicking on them in the list above")
+            if len(trueindx) < 2:
+                st.info("Wähle 2 Zahlen durch das Klicken auf eine Zahl in der obigen Liste")
                 pass
             # wenn ja, dann schauen wir ob der swap passt und durchgefuehrt werden darf
             else:
-                try:
-                    if self.tutor.isSwapValid(selectedIndex1, selectedIndex2, currentIndex, currentArray):
-                        self.tauschearray()
-                        self.openTauschDialog()
-                        return st.info("nice")
-                # bei fehlern werden exceptions ausgegeben, welche dann die richtige information weiterleiten soll
-                except Exception as e:
-                    print(e)
-                    st.info("Das ist nicht ganz richtig, versuche es nochmal")
+                result = self.tutor.isSwapValid(selectedindex1, selectedindex2, updatedIndex, currentArray)
+
+                if result == "True":
+                    updatedIndex = updatedIndex - 1
+                    st.session_state['updatedIndex'] = updatedIndex
+                    print("updated Index: " + str(updatedIndex))
+                    self.tauschearray() # todo übergebe die indize zum tauschen (momentan wird nur das 1. und 2. element getauscht, alles andere wird missachtet)
+                    #update den neuen index zum vergleichen mit der zahl davor
+                    self.openTauschDialog()
+                    return st.info("nice")
+                elif result == "beginning of list":
+                     st.info("Der Listenanfang ist erreicht")
+                elif result == "wrong swap max":
+                     st.info("Die Zahl ... ist größer als ...")
+                elif result == "wrong swap":
+                     st.info("Das stimmt leider nicht")
 
         if st.button("Korrekt eingeordnet?"):
             if self.tutor.isAtCorrectPosition(currentIndex, currentArray):
@@ -124,12 +177,17 @@ class UIInsertionsort:
                 st.session_state['sortareaindex'] += 1
                 st.session_state['orderingprocess'] = False
                 st.session_state['alreadypressed'] = False
+                self.resetSelectedIndex()
                 st.rerun()
             else:
                 st.info("Das Element ist noch nicht richtig eingeordnet")
+        # -------------------------------------------------------------------------------------------------------------
 
 
 
-
+    def resetSelectedIndex(self):
+        st.session_state['selectedIndex1'] = -1
+        st.session_state['selectedIndex2'] = -1
+        st.session_state['updatedIndex'] = -1
 
 
