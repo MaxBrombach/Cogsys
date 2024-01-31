@@ -20,17 +20,15 @@ class UIInsertionsort:
 
     def initializeSessionstates(self):
         if 'alreadypressed' not in st.session_state:
-            st.session_state['startarray'] = [2, 4, 3, 8, 7]
+            st.session_state['startarray'] = [2, 4, 3, 8, 1]
             st.session_state['sortareaindex'] = 0
             st.session_state['alreadypressed'] = False
+            st.session_state['buttonarray'] = np.zeros(5, dtype=bool)
 
     def createButtonArray(self):
         col1, col2, col3, col4, col5 = st.columns((1, 1, 1, 1, 1))
         columnlist = [col1, col2, col3, col4, col5]
 
-        #initialisiere session state
-        if 'buttonarray' not in st.session_state:
-            st.session_state['buttonarray'] = np.zeros(5, dtype=bool)
 
         buttonvalues = np.zeros(5, dtype=bool)
 
@@ -48,21 +46,18 @@ class UIInsertionsort:
             st.session_state['alreadypressed'] = True
 
             # liegt der User richtig oder falsch? -> handlen
-            if self.logic.iscorrect("implementment"):
-                self.tutor.handlestuff()
+            if self.logic.swapneeded(st.session_state['sortareaindex'], st.session_state['startarray']):
                 self.openTauschDialog()
             else:
-                if self.tutor.handlestuff() == 1:
-                    #call dialog
-                    pass
+                self.tutor.noSwapNeeded()
 
         if col2.button("Nein"):
-            if self.logic.iscorrect():
-                #increase sortedarea
+            if not self.logic.swapneeded(st.session_state['sortareaindex'], st.session_state['startarray']):
                 st.session_state['sortareaindex'] += 1
                 st.rerun()
             else:
-                self.no.custom_error()
+                self.tutor.swapNeeded()
+
 
 
 

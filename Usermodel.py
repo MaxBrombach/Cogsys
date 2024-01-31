@@ -5,19 +5,18 @@ class Usermodel:
 
     def __init__(self):
         self.fehler = 0
-        self.setMaxTries = 3
+        self.maxtries = 3
         self.tries = 0
-        self.endOfList = False
-        self.alreadySorted = False
 
-
-    def resetMaxTries(self):
-        self.setMaxTries = 0
+    def resetMaxtries(self):
+        self.maxtries = 0
     def increaseAttempt(self):
         self.tries += 1
-    def setEndOfList(self, truthValue):
-        self.endOfList = truthValue
-    def setAlreadySorted(self, truthValue):
-        self.alreadySorted = truthValue
+
+    def maxTriesachieved(self):
+        if self.maxtries == self.tries:
+            return True
+        return False
+
     def handlestuff(self):
         pass

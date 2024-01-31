@@ -2,7 +2,7 @@ import streamlit as st
 
 import UIstuff
 
-title = st.title("Insertion Sort")
+
 header = st.empty()
 text = st.empty()
 explanation_button_box = st.empty()
@@ -37,7 +37,9 @@ def main_page():
 
     if explanation_button:
         explanation()
-    if exercise_button:
+
+    if exercise_button or st.session_state['exercisestart']:
+        st.session_state['exercisestart'] = True
         exercise()
 
 
@@ -50,17 +52,19 @@ def explanation():
 
 
 def exercise():
-    header.header("Insertion Sort Adventure")
+    st.title("Insertion Sort")
     exp_header.empty()
     text.empty()
     explanation_button_box.empty()
     exercise_button_box.empty()
     exp_text_box.empty()
     UI.createButtonArray()
-    st.button("Zurück zum Start")
+
 
 
 if __name__ == '__main__':
+    if 'exercisestart' not in st.session_state:
+        st.session_state['exercisestart'] = False
     UI = UIstuff.UIInsertionsort()
     # streamlit run main.py
     main_page()

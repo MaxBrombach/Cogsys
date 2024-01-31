@@ -2,5 +2,9 @@ import numpy as np
 
 class Logic:
 
-    def iscorrect(self, param="P"):
-        return True
+    def swapneeded(self, sortedindex: int, currentarray: np.array):
+
+        if currentarray[sortedindex] < currentarray[sortedindex + 1]:
+            return False
+        else:
+            return True
