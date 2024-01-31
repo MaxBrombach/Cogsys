@@ -172,22 +172,18 @@ class UIInsertionsort:
                      st.info("Das stimmt leider nicht")
 
         if st.button("Korrekt eingeordnet?"):
-            if self.tutor.isAtCorrectPosition(currentIndex, currentArray):
+            if self.tutor.isAtCorrectPosition(updatedIndex, currentArray):
                 #wenn korrekt sortedarea wird inkrementiert
+                #self.resetSelectedIndex()
+                st.session_state['selectedIndex1'] = -1
+                st.session_state['selectedIndex2'] = -1
+                st.session_state['updatedIndex'] = -1
                 st.session_state['sortareaindex'] += 1
                 st.session_state['orderingprocess'] = False
                 st.session_state['alreadypressed'] = False
-                self.resetSelectedIndex()
                 st.rerun()
             else:
                 st.info("Das Element ist noch nicht richtig eingeordnet")
-        # -------------------------------------------------------------------------------------------------------------
-
-
-
-    def resetSelectedIndex(self):
-        st.session_state['selectedIndex1'] = -1
-        st.session_state['selectedIndex2'] = -1
-        st.session_state['updatedIndex'] = -1
+        # ------------------------------------------------------------------------------------------------------------
 
 

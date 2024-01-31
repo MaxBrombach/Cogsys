@@ -33,13 +33,11 @@ class TutorModel:
         newList = currentList
 
         print("index1: " + str(selectedIndex1) + " index2: " + str(selectedIndex2) + " current: " + str(currentIndex))
-        print("Momentane Liste: " + str(newList))
 
         # check if the start of list was reached
         if newList[currentIndex] == 0:
             return "beginning of list"
         if selectedIndex1 != currentIndex:
-            print("Shit goes wrong here")
             return "wrong swap"
         elif newList[selectedIndex1] > newList[selectedIndex2]:
             return "True"
@@ -50,9 +48,10 @@ class TutorModel:
             return "wrong swap"
 
     def isAtCorrectPosition(self, currentIndex, currentArray):
+        #print("currentindex: " + str(currentIndex) + " curerntarray: " + str(currentArray))
         if currentIndex == 0:
             return True
-        elif currentArray[currentIndex] > currentArray[currentIndex-1]:
+        elif currentArray[currentIndex] < currentArray[currentIndex+1]:
             return True
         else:
             return False
