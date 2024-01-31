@@ -36,7 +36,7 @@ class TutorModel:
             st.session_state['updatedIndex'] = currentIndex
 
         # todo handle wrongly selected indexes
-        indexToCompare =  st.session_state['updatedIndex']
+        indexToCompare = st.session_state['updatedIndex']
 
         # check if the start of list was reached
         if newList[indexToCompare] == 0:
