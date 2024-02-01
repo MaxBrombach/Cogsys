@@ -1,7 +1,5 @@
-import numpy as np
 import streamlit as st
 import Usermodel
-import CustomExceptions
 
 
 class TutorModel:
@@ -17,10 +15,6 @@ class TutorModel:
         if st.session_state['userModel'].maxTriesachieved():
             st.error(str(current_number) + " ist größer als  " + str(compare_number) +
                      ": es muss also nicht getauscht werden.")
-            # TODO was passiert wenn er komplett verkackt -> maxtries überschreitet
-            # implement logic
-            st.session_state['userModel'].reset_tries()
-            pass
         else:
             if st.session_state['userModel'].current_tries() == 1:
                 st.warning("Schau nochmal genauer hin. Muss wirklich getauscht werden?")
@@ -32,10 +26,6 @@ class TutorModel:
         if st.session_state['userModel'].maxTriesachieved():
             st.error(str(current_number) + " ist kleiner als  " + str(compare_number) +
                      ": es muss also getauscht werden.")
-            # TODO was passiert wenn er komplett verkackt -> maxtries überschreitet
-            # implement logic
-            st.session_state['userModel'].reset_tries()
-            pass
         else:
             if st.session_state['userModel'].current_tries() == 1:
                 st.warning("Schau nochmal genauer hin. Muss wirklich nicht getauscht werden?")
