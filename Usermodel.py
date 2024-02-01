@@ -8,13 +8,14 @@ class Usermodel:
         self.maxtries = 3
         self.tries = 0
 
-    def resetMaxtries(self):
-        self.maxtries = 0
+    def reset_tries(self):
+        self.tries = 0
+
     def increaseAttempt(self):
         self.tries += 1
 
     def maxTriesachieved(self):
-        if self.maxtries == self.tries:
+        if self.maxtries <= self.tries:
             return True
         return False
 

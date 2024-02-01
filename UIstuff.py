@@ -51,7 +51,7 @@ class UIInsertionsort:
         current_number = st.session_state['startarray'][st.session_state['sortareaindex'] + 1]
         compare_number = st.session_state['startarray'][st.session_state['sortareaindex']]
 
-        if col1.button("Ja") or st.session_state['alreadypressed'] or st.session_state['orderingprocess']:
+        if col1.button("Ja") or st.session_state['orderingprocess']:
             st.session_state['alreadypressed'] = True
 
             # liegt der User richtig oder falsch? -> handlen

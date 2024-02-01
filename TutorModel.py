@@ -19,6 +19,7 @@ class TutorModel:
                      ": es muss also nicht getauscht werden.")
             # TODO was passiert wenn er komplett verkackt -> maxtries überschreitet
             # implement logic
+            st.session_state['userModel'].reset_tries()
             pass
         else:
             if st.session_state['userModel'].current_tries() == 1:
@@ -33,6 +34,7 @@ class TutorModel:
                      ": es muss also getauscht werden.")
             # TODO was passiert wenn er komplett verkackt -> maxtries überschreitet
             # implement logic
+            st.session_state['userModel'].reset_tries()
             pass
         else:
             if st.session_state['userModel'].current_tries() == 1:
