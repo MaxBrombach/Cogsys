@@ -18,5 +18,8 @@ class Usermodel:
             return True
         return False
 
+    def current_tries(self):
+        return self.tries
+
     def handlestuff(self):
         pass

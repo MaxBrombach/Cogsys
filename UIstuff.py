@@ -47,6 +47,10 @@ class UIInsertionsort:
         # Todo maybe hide these buttons as long as the user swaps one number beneath
         st.info("Muss getauscht werden?")
         col1, col2, col3, col4 = st.columns((1, 1, 1, 1))
+
+        current_number = st.session_state['startarray'][st.session_state['sortareaindex'] + 1]
+        compare_number = st.session_state['startarray'][st.session_state['sortareaindex']]
+
         if col1.button("Ja") or st.session_state['alreadypressed'] or st.session_state['orderingprocess']:
             st.session_state['alreadypressed'] = True
 
@@ -54,22 +58,26 @@ class UIInsertionsort:
             if self.logic.swapneeded(st.session_state['sortareaindex'], st.session_state['startarray']) or st.session_state['orderingprocess']:
                 self.openTauschDialog()
             else:
-                self.tutor.noSwapNeeded()
+                self.tutor.noSwapNeeded(current_number, compare_number)
 
         if col2.button("Nein"):
             if not self.logic.swapneeded(st.session_state['sortareaindex'], st.session_state['startarray']):
                 st.session_state['sortareaindex'] += 1
                 st.rerun()
             else:
-                self.tutor.swapNeeded()
+                self.tutor.swapNeeded(current_number, compare_number)
 
         # if user needs help to know which number he currently needs to sort
         # todo Refactor into notifications
         if col3.button("Welche Zahl soll ich sortieren?"):
             if st.session_state['sortareaindex'] == 0:
-                col4.info("Du muss die Zahl an folgender Position sortieren: " + str(st.session_state['sortareaindex'] + 2)+ " (Die 1. Zahl wird als sortiert angesehen :) )")
+                col4.info("Du muss die Zahl " + str(current_number) +
+                          " an Position " + str(st.session_state['sortareaindex'] + 2)
+                          + " sortieren. (Die 1. Zahl wird als sortiert angesehen :)")
             else:
-                col4.info("Du muss die Zahl an folgender Position sortieren: " + str(st.session_state['sortareaindex'] +2))
+                col4.info("Du muss die Zahl " + str(current_number) +
+                          " an Position " + str(st.session_state['sortareaindex'] + 2)
+                          + " sortieren.")
 
 
     def tauschearray(self):

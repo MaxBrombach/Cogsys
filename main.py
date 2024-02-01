@@ -2,7 +2,6 @@ import streamlit as st
 
 import UIstuff
 
-
 header = st.empty()
 text = st.empty()
 explanation_button_box = st.empty()
@@ -53,13 +52,14 @@ def explanation():
 
 def exercise():
     st.title("Insertion Sort")
+    st.write("Sortiere die Liste, bis alle Elemente an der richtigen Stelle stehen. "
+             "Bereits sortierte Zahlen werden mit spizen Klammern, z.B. <Zahl> gekennzeichnet. Viel Spaß!")
     exp_header.empty()
     text.empty()
     explanation_button_box.empty()
     exercise_button_box.empty()
     exp_text_box.empty()
     UI.createButtonArray()
-
 
 
 if __name__ == '__main__':

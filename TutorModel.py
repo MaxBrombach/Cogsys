@@ -3,31 +3,42 @@ import streamlit as st
 import Usermodel
 import CustomExceptions
 
+
 class TutorModel:
 
     def __init__(self):
         if 'userModel' not in st.session_state:
             st.session_state['userModel'] = Usermodel.Usermodel()
-        #if 'updatedIndex' not in st.session_state:
+        # if 'updatedIndex' not in st.session_state:
         #    st.session_state['updatedIndex'] = 0
 
-    def noSwapNeeded(self):
+    def noSwapNeeded(self, current_number, compare_number):
         st.session_state['userModel'].increaseAttempt()
         if st.session_state['userModel'].maxTriesachieved():
-            #TODO was passiert wenn er komplett verkackt -> maxtries überschreitet
+            st.error(str(current_number) + " ist größer als  " + str(compare_number) +
+                     ": es muss also nicht getauscht werden.")
+            # TODO was passiert wenn er komplett verkackt -> maxtries überschreitet
             # implement logic
             pass
         else:
-            st.error("Es darf nicht getauscht werden")
+            if st.session_state['userModel'].current_tries() == 1:
+                st.warning("Schau nochmal genauer hin. Muss wirklich getauscht werden?")
+            else:
+                st.warning("Vergleiche die " + str(current_number) + " mit " + str(compare_number) + ". ")
 
-    def swapNeeded(self):
+    def swapNeeded(self, current_number, compare_number):
         st.session_state['userModel'].increaseAttempt()
         if st.session_state['userModel'].maxTriesachieved():
+            st.error(str(current_number) + " ist kleiner als  " + str(compare_number) +
+                     ": es muss also getauscht werden.")
             # TODO was passiert wenn er komplett verkackt -> maxtries überschreitet
-            #  implement logic
+            # implement logic
             pass
         else:
-            st.error("Es muss getauscht werden")
+            if st.session_state['userModel'].current_tries() == 1:
+                st.warning("Schau nochmal genauer hin. Muss wirklich nicht getauscht werden?")
+            else:
+                st.warning("Vergleiche die " + str(current_number) + " mit der " + str(compare_number) + ". ")
 
     def isSwapValid(self, selectedIndex1, selectedIndex2, currentIndex, currentList):
         newList = currentList
@@ -48,19 +59,10 @@ class TutorModel:
             return "wrong swap"
 
     def isAtCorrectPosition(self, currentIndex, currentArray):
-        #print("currentindex: " + str(currentIndex) + " curerntarray: " + str(currentArray))
+        # print("currentindex: " + str(currentIndex) + " curerntarray: " + str(currentArray))
         if currentIndex == 0:
             return True
-        elif currentArray[currentIndex] < currentArray[currentIndex+1]:
+        elif currentArray[currentIndex] < currentArray[currentIndex + 1]:
             return True
         else:
             return False
-
-
-
-
-   
-
-   
-
-
