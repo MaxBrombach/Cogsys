@@ -28,6 +28,7 @@ class UIInsertionsort:
             st.session_state['updatedIndex'] = -1
             st.session_state['selectedIndex1'] = -1
             st.session_state['selectedIndex2'] = -1
+            st.session_state['triggeronetimererun'] = True
 
     def createButtonArray(self):
         col1, col2, col3, col4, col5 = st.columns((1, 1, 1, 1, 1))
@@ -45,14 +46,16 @@ class UIInsertionsort:
         st.session_state['buttonarray'] = np.logical_or(st.session_state['buttonarray'], buttonvalues)
 
         # Todo maybe hide these buttons as long as the user swaps one number beneath
-        st.info("Muss getauscht werden?")
+        if not st.session_state['orderingprocess']:
+            st.info("Muss getauscht werden?")
         col1, col2, col3, col4 = st.columns((1, 1, 1, 1))
 
         current_number = st.session_state['startarray'][st.session_state['sortareaindex'] + 1]
         compare_number = st.session_state['startarray'][st.session_state['sortareaindex']]
-
-        if col1.button("Ja") or st.session_state['orderingprocess']:
+        #TODO wenn im ordering process disable buttons
+        if col1.button("Ja", disabled=st.session_state['orderingprocess']) or st.session_state['orderingprocess']:
             st.session_state['alreadypressed'] = True
+
 
             # liegt der User richtig oder falsch? -> handlen
             if self.logic.swapneeded(st.session_state['sortareaindex'], st.session_state['startarray']) or st.session_state['orderingprocess']:
@@ -60,7 +63,7 @@ class UIInsertionsort:
             else:
                 self.tutor.noSwapNeeded(current_number, compare_number)
 
-        if col2.button("Nein"):
+        if col2.button("Nein", disabled=st.session_state['orderingprocess']):
             if not self.logic.swapneeded(st.session_state['sortareaindex'], st.session_state['startarray']):
                 st.session_state['sortareaindex'] += 1
                 st.rerun()
@@ -104,6 +107,9 @@ class UIInsertionsort:
     def openTauschDialog(self):
         st.info("Tausche bis die Zahl korrekt eingeordnet ist")
         st.session_state['orderingprocess'] = True
+        if st.session_state['triggeronetimererun']:
+            st.session_state['triggeronetimererun'] = False
+            st.rerun()
 
 
         # Variablen initiieren
@@ -189,6 +195,7 @@ class UIInsertionsort:
                 st.session_state['sortareaindex'] += 1
                 st.session_state['orderingprocess'] = False
                 st.session_state['alreadypressed'] = False
+                st.session_state['triggeronetimererun'] = True
                 st.rerun()
             else:
                 st.info("Das Element ist noch nicht richtig eingeordnet")
