@@ -2,7 +2,6 @@ from time import sleep
 
 import streamlit as st
 import numpy as np
-import Notification
 import logic
 import TutorModel
 
@@ -10,13 +9,12 @@ import TutorModel
 class UIInsertionsort:
 
     def __init__(self):
-        self.no = Notification.Notification()
         self.logic = logic.Logic()
         self.tutor = TutorModel.TutorModel()
         self.initializeSessionstates()
 
     def initializeSessionstates(self):
-        if 'alreadypressed' not in st.session_state:
+        if 'alreadypressed' not in st.session_state or 'finished_run' in st.session_state:
             st.session_state['startarray'] = [2, 4, 3, 8, 1]
             st.session_state['sortareaindex'] = 0
             st.session_state['alreadypressed'] = False
@@ -28,7 +26,11 @@ class UIInsertionsort:
             st.session_state['triggeronetimererun'] = True
 
     def createButtonArray(self):
-        col1, col2, col3, col4, col5 = st.columns((1, 1, 1, 1, 1))
+        info_text = st.empty()
+        info_text.write("Sortiere die Liste, bis alle Elemente an der richtigen Stelle stehen. "
+                        "Bereits sortierte Zahlen werden mit spizen Klammern, z.B. <Zahl> gekennzeichnet. Viel Spaß!")
+        columns = st.empty()
+        col1, col2, col3, col4, col5 = columns.columns((1, 1, 1, 1, 1))
         columnlist = [col1, col2, col3, col4, col5]
 
         buttonvalues = np.zeros(5, dtype=bool)
@@ -41,7 +43,14 @@ class UIInsertionsort:
 
         st.session_state['buttonarray'] = np.logical_or(st.session_state['buttonarray'], buttonvalues)
 
-        # Todo maybe hide these buttons as long as the user swaps one number beneath
+        if st.session_state['sortareaindex'] == len(st.session_state['startarray']) - 1:
+            st.session_state['finished_run'] = True
+            st.session_state['exercisestart'] = False
+            self.initializeSessionstates()
+            columns.empty()
+            st.rerun()
+            return ()
+
         if not st.session_state['orderingprocess']:
             st.info("Muss getauscht werden?")
         col1, col2, col3, col4 = st.columns((1, 1, 1, 1))
