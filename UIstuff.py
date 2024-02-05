@@ -207,7 +207,7 @@ class UIInsertionsort:
                     st.info("Das stimmt leider nicht")
 
         if st.button("Korrekt eingeordnet?"):
-            if self.tutor.isAtCorrectPosition(updatedIndex, currentArray):
+            if self.tutor.isAtCorrectPosition(updatedIndex, currentArray, st.session_state['sortareaindex']):
                 # wenn korrekt sortedarea wird inkrementiert
                 # self.resetSelectedIndex()
                 st.session_state['selectedIndex1'] = -1

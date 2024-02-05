@@ -48,11 +48,13 @@ class TutorModel:
         else:
             return "wrong swap"
 
-    def isAtCorrectPosition(self, currentIndex, currentArray):
-        # print("currentindex: " + str(currentIndex) + " curerntarray: " + str(currentArray))
-        if currentIndex == 0:
-            return True
-        elif currentArray[currentIndex] < currentArray[currentIndex + 1]:
-            return True
-        else:
+    def isAtCorrectPosition(self, current_index, current_array, sortedindex):
+        print("currentindex: " + str(current_index) + " curerntarray: " + str(current_array) + " sortedindex: " + str(sortedindex))
+        if current_index == 0 and current_array[current_index] > current_array[current_index +1]:
             return False
+        elif current_index == sortedindex:
+            return False
+        elif current_array[current_index] > current_array[current_index +1]:
+            return False
+        else:
+            return True
