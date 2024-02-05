@@ -30,31 +30,38 @@ class TutorModel:
             else:
                 st.warning("Vergleiche die " + str(current_number) + " mit der " + str(compare_number) + ". ")
 
-    def isSwapValid(self, selectedIndex1, selectedIndex2, currentIndex, currentList):
-        newList = currentList
+    def isSwapValid(self, selected_index1, selected_index2, current_index, current_list):
+        new_list = current_list
 
-        print("index1: " + str(selectedIndex1) + " index2: " + str(selectedIndex2) + " current: " + str(currentIndex))
+        print("Current tries: "+ str(st.session_state['userModel'].current_tries()))
 
-        # check if the start of list was reached
-        if newList[currentIndex] == 0:
-            return "beginning of list"
-        if selectedIndex1 != currentIndex:
-            return "wrong swap"
-        elif newList[selectedIndex1] > newList[selectedIndex2]:
-            return "True"
-
-        elif st.session_state['userModel'].maxTriesachieved():
-            return "wrong swap max"
+        if selected_index1 != current_index:
+            st.session_state['userModel'].increaseAttempt()
+            if st.session_state['userModel'].maxTriesachieved():
+                st.error("Falsche Wahl der Zahlen: Du musst die Zahlen an den Stellen " + str(current_index) + " sowie " + str(current_index+1) + " tauschen")
+            elif st.session_state['userModel'].current_tries() == 1:
+                st.warning("Hast du eventuell noch die falschen Zahlen ausgewählt?")
+            else:
+                st.warning(
+                    "Wahl der Zahlen zum tauschen war nicht ganz richtig, momentan betrachtest du die Zahl an der Stelle " + str(
+                        current_index))
+            return False
+        elif new_list[selected_index1] > new_list[selected_index2]:
+            return True
         else:
-            return "wrong swap"
+            st.session_state['userModel'].increaseAttempt()
+            st.warning("Die Zahl an der Stelle " + str(current_index + 1) + " ist bereits eingeordnet.")
+            return False
 
     def isAtCorrectPosition(self, current_index, current_array, sortedindex):
-        print("currentindex: " + str(current_index) + " curerntarray: " + str(current_array) + " sortedindex: " + str(sortedindex))
-        if current_index == 0 and current_array[current_index] > current_array[current_index +1]:
+        #print("currentindex: " + str(current_index) + " curerntarray: " + str(current_array) + " sortedindex: " + str(sortedindex))
+        if current_index == -1:
+            return True
+        if current_index == 0 and current_array[current_index] > current_array[current_index + 1]:
             return False
         elif current_index == sortedindex:
             return False
-        elif current_array[current_index] > current_array[current_index +1]:
+        elif current_array[current_index] > current_array[current_index + 1]:
             return False
         else:
             return True

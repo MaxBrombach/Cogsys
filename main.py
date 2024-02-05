@@ -74,6 +74,7 @@ def exercise():
     exercise_button_box.empty()
     back_button_box.empty()
     exp_text_box.empty()
+    #UI.initializeSessionstates()
     UI.createButtonArray()
 
 
