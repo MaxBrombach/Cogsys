@@ -43,8 +43,8 @@ class TutorModel:
                 st.warning("Hast du eventuell noch die falschen Zahlen ausgewählt?")
             else:
                 st.warning(
-                    "Wahl der Zahlen zum tauschen war nicht ganz richtig, momentan betrachtest du die Zahl an der Stelle " + str(
-                        current_index))
+                    "Wahl der Zahlen zum tauschen war nicht ganz richtig, Momentan betrachtest du die Zahl an der Stelle " + str(
+                        current_index + 1))
             return False
         elif new_list[selected_index1] > new_list[selected_index2]:
             return True

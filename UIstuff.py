@@ -171,8 +171,8 @@ class UIInsertionsort:
         if selectedindex1 == -1 or selectedindex2 == -1:
             st.info('Wähle 2 Zahlen zum Tauschen')
         else:
-            st.info("Wahl: Position " + str(selectedindex1 + 1) + " = Zahl  " + str(st.session_state['startarray'][selectedindex1]) +
-                    " und Position " + str(selectedindex2 + 1) + " = Zahl " + str(st.session_state['startarray'][selectedindex2]))
+            st.info("Wahl: Position " + str(selectedindex1 + 1) + " = Zahl [" + str(st.session_state['startarray'][selectedindex1]) +
+                    "] und Position " + str(selectedindex2 + 1) + " = Zahl [" + str(st.session_state['startarray'][selectedindex2]) + "]")
         # -------------------------------------------------------------------------------------------------------------
 
         if len(trueindx) == 2 or selectedindex1 != -1 or selectedindex2 != -1:
