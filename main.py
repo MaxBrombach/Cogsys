@@ -2,12 +2,13 @@ import streamlit as st
 
 import UIstuff
 
+st.title("Insertion Sort")
 header = st.empty()
 text = st.empty()
+back_button_box = st.empty()
 explanation_button_box = st.empty()
 exp_header = st.empty()
 exercise_button_box = st.empty()
-back_button_box = st.empty()
 exp_text_box = st.empty()
 exp_text = f'<p>Vor dir liegen verschiedene Zahlen. Einige sind schon sortiert, andere warten darauf, dass du sie an die richtige Stelle bringst.</p>\
 <ol start="1" type="1">\
@@ -23,23 +24,39 @@ exp_text = f'<p>Vor dir liegen verschiedene Zahlen. Einige sind schon sortiert, 
 
 def main_page():
     header.header("Willkommen zum Sortier-Abenteuer!")
-    text.write(
-        "Heute werden wir ein spannendes Spiel namens \"Insertion Sort Adventure\" spielen! Bevor wir loslegen, "
-        "lass uns einen Blick darauf werfen, was genau \"Insertion Sort\" ist. "
-        "Insertion Sort ist ein einfacher Sortieralgorithmus. Denk an eine Liste von Zahlen. "
-        "Deine Aufgabe ist es, sie in aufsteigender Reihenfolge zu bringen. "
-        "Hier kommt Insertion Sort ins Spiel. Du gehst die Liste durch, vergleichst jedes Element mit "
-        "den bereits sortierten Elementen und fügst es an die richtige Stelle ein. So entsteht Schritt "
-        "für Schritt eine sortierte Liste.")
-    explanation_button = explanation_button_box.button('Wie funktioniert Insertion Sort?')
-    exercise_button = exercise_button_box.button('Los geht\'s!')
+    if 'finished_run' in st.session_state:
+        start_button = back_button_box.button("Zurück zur Startseite")
+        text.write("Herzlichen Glückwunsch, du hast die Liste erfolgreich einsortiert! :)")
+        exercise_button = exercise_button_box.button('Nochmal!')
+        if exercise_button or st.session_state['exercisestart']:
+            if 'finished_run' in st.session_state:
+                del st.session_state['finished_run']
+            st.session_state['exercisestart'] = True
+            exercise()
+        if start_button:
+            if 'finished_run' in st.session_state:
+                del st.session_state['finished_run']
+            st.rerun()
+    else:
+        text.write(
+            "Heute werden wir ein spannendes Spiel namens \"Insertion Sort Adventure\" spielen! Bevor wir loslegen, "
+            "lass uns einen Blick darauf werfen, was genau \"Insertion Sort\" ist. "
+            "Insertion Sort ist ein einfacher Sortieralgorithmus. Denk an eine Liste von Zahlen. "
+            "Deine Aufgabe ist es, sie in aufsteigender Reihenfolge zu bringen. "
+            "Hier kommt Insertion Sort ins Spiel. Du gehst die Liste durch, vergleichst jedes Element mit "
+            "den bereits sortierten Elementen und fügst es an die richtige Stelle ein. So entsteht Schritt "
+            "für Schritt eine sortierte Liste.")
+        explanation_button = explanation_button_box.button('Wie funktioniert Insertion Sort?')
+        exercise_button = exercise_button_box.button('Los geht\'s!')
 
-    if explanation_button:
-        explanation()
+        if explanation_button:
+            explanation()
 
-    if exercise_button or st.session_state['exercisestart']:
-        st.session_state['exercisestart'] = True
-        exercise()
+        if exercise_button or st.session_state['exercisestart']:
+            if 'finished_run' in st.session_state:
+                del st.session_state['finished_run']
+            st.session_state['exercisestart'] = True
+            exercise()
 
 
 def explanation():
@@ -51,13 +68,11 @@ def explanation():
 
 
 def exercise():
-    st.title("Insertion Sort")
-    st.write("Sortiere die Liste, bis alle Elemente an der richtigen Stelle stehen. "
-             "Bereits sortierte Zahlen werden mit spitzen Klammern, z.B. <Zahl> gekennzeichnet. Viel Spaß!")
     exp_header.empty()
     text.empty()
     explanation_button_box.empty()
     exercise_button_box.empty()
+    back_button_box.empty()
     exp_text_box.empty()
     UI.createButtonArray()
 

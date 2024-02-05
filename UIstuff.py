@@ -2,18 +2,14 @@ from time import sleep
 
 import streamlit as st
 import numpy as np
-import Notification
 import logic
 import TutorModel
 import random
 
 
-
 class UIInsertionsort:
 
-
     def __init__(self):
-        self.no = Notification.Notification()
         self.logic = logic.Logic()
         self.tutor = TutorModel.TutorModel()
         self.initializeSessionstates()
@@ -36,11 +32,15 @@ class UIInsertionsort:
             st.session_state['updatedIndex'] = -1
             st.session_state['selectedIndex1'] = -1
             st.session_state['selectedIndex2'] = -1
+            st.session_state['triggeronetimererun'] = True
 
     def createButtonArray(self):
-        col1, col2, col3, col4, col5 = st.columns((1, 1, 1, 1, 1))
+        info_text = st.empty()
+        info_text.write("Sortiere die Liste, bis alle Elemente an der richtigen Stelle stehen. "
+                        "Bereits sortierte Zahlen werden mit spizen Klammern, z.B. <Zahl> gekennzeichnet. Viel Spaß!")
+        columns = st.empty()
+        col1, col2, col3, col4, col5 = columns.columns((1, 1, 1, 1, 1))
         columnlist = [col1, col2, col3, col4, col5]
-
 
         buttonvalues = np.zeros(5, dtype=bool)
 
@@ -52,25 +52,38 @@ class UIInsertionsort:
 
         st.session_state['buttonarray'] = np.logical_or(st.session_state['buttonarray'], buttonvalues)
 
-        # Todo maybe hide these buttons as long as the user swaps one number beneath
-        st.info("Muss getauscht werden?")
+        if st.session_state['sortareaindex'] == len(st.session_state['startarray']) - 1:
+            st.session_state['finished_run'] = True
+            st.session_state['exercisestart'] = False
+            self.initializeSessionstates()
+            columns.empty()
+            st.rerun()
+            return ()
+
+        if not st.session_state['orderingprocess']:
+            st.info("Muss getauscht werden?")
         col1, col2, col3, col4 = st.columns((1, 1, 1, 1))
 
         current_number = st.session_state['startarray'][st.session_state['sortareaindex'] + 1]
         compare_number = st.session_state['startarray'][st.session_state['sortareaindex']]
+        current_position = st.session_state['sortareaindex'] + 2
 
-        if col1.button("Ja") or st.session_state['orderingprocess']:
+        # TODO wenn im ordering process disable buttons
+        if col1.button("Ja", disabled=st.session_state['orderingprocess']) or st.session_state['orderingprocess']:
             st.session_state['alreadypressed'] = True
 
             # liegt der User richtig oder falsch? -> handlen
-            if self.logic.swapneeded(st.session_state['sortareaindex'], st.session_state['startarray']) or st.session_state['orderingprocess']:
+            if self.logic.swapneeded(st.session_state['sortareaindex'], st.session_state['startarray']) or \
+                    st.session_state['orderingprocess']:
+                st.session_state['userModel'].reset_tries()
                 self.openTauschDialog()
             else:
                 self.tutor.noSwapNeeded(current_number, compare_number)
 
-        if col2.button("Nein"):
+        if col2.button("Nein", disabled=st.session_state['orderingprocess']):
             if not self.logic.swapneeded(st.session_state['sortareaindex'], st.session_state['startarray']):
                 st.session_state['sortareaindex'] += 1
+                st.session_state['userModel'].reset_tries()
                 st.rerun()
             else:
                 self.tutor.swapNeeded(current_number, compare_number)
@@ -79,26 +92,31 @@ class UIInsertionsort:
         # todo Refactor into notifications
         if col3.button("Welche Zahl soll ich sortieren?"):
             if st.session_state['sortareaindex'] == 0:
+                if st.session_state['orderingprocess']:
+                    current_position = st.session_state['updatedIndex'] + 2
+                    current_number = st.session_state['startarray'][st.session_state['updatedIndex'] + 1]
                 col4.info("Du muss die Zahl " + str(current_number) +
-                          " an Position " + str(st.session_state['sortareaindex'] + 2)
+                          " an Position " + str(current_position)
                           + " sortieren. (Die 1. Zahl wird als sortiert angesehen :)")
             else:
+                if st.session_state['orderingprocess']:
+                    current_position = st.session_state['updatedIndex'] + 2
+                    current_number = st.session_state['startarray'][st.session_state['updatedIndex'] + 1]
                 col4.info("Du muss die Zahl " + str(current_number) +
-                          " an Position " + str(st.session_state['sortareaindex'] + 2)
+                          " an Position " + str(current_position)
                           + " sortieren.")
-
 
     def tauschearray(self):
         trueindx = np.where(st.session_state['buttonarray'])[0]
         temp = st.session_state['startarray'][trueindx[0]]
         st.session_state['startarray'][trueindx[0]] = st.session_state['startarray'][trueindx[1]]
         st.session_state['startarray'][trueindx[1]] = temp
-        st.success(f"Die Zahlen {st.session_state['startarray'][trueindx[0]]} und {st.session_state['startarray'][trueindx[1]]} wurden getauscht")
+        st.success(
+            f"Die Zahlen {st.session_state['startarray'][trueindx[0]]} und {st.session_state['startarray'][trueindx[1]]} wurden getauscht")
         self.resetButtonarray()
         st.session_state['alreadypressed'] = False
         sleep(1)
-        #reset array
-
+        # reset array
 
         st.rerun()
 
@@ -112,7 +130,9 @@ class UIInsertionsort:
     def openTauschDialog(self):
         st.info("Tausche bis die Zahl korrekt eingeordnet ist")
         st.session_state['orderingprocess'] = True
-
+        if st.session_state['triggeronetimererun']:
+            st.session_state['triggeronetimererun'] = False
+            st.rerun()
 
         # Variablen initiieren
         # -------------------------------------------------------------------------------------------------------------
@@ -137,7 +157,7 @@ class UIInsertionsort:
         # -------------------------------------------------------------------------------------------------------------
         trueindx = np.where(st.session_state['buttonarray'])[0]
 
-        #print(trueindx)
+        # print(trueindx)
 
         if len(trueindx) == 2:
             st.session_state['selectedIndex1'] = trueindx[0]
@@ -150,7 +170,7 @@ class UIInsertionsort:
         if selectedindex1 == -1 or selectedindex2 == -1:
             st.info('Wähle 2 Zahlen zum Tauschen')
         else:
-            st.info("Choice: Stelle1 = " + str(selectedindex1) + " und Stelle2 = "+ str(selectedindex2))
+            st.info("Choice: Stelle1 = " + str(selectedindex1) + " und Stelle2 = " + str(selectedindex2))
         # -------------------------------------------------------------------------------------------------------------
 
         if len(trueindx) == 2:
@@ -160,7 +180,7 @@ class UIInsertionsort:
                 st.session_state['selectedIndex2'] = -1
                 st.rerun()
 
-        #Tauschprozess 'nach vorne'
+        # Tauschprozess 'nach vorne'
         # -------------------------------------------------------------------------------------------------------------
         if st.button("Tauschen"):
             # checken, ob der user ueerhaupt die zahlen geklickt hat
@@ -176,30 +196,28 @@ class UIInsertionsort:
                     updatedIndex = updatedIndex - 1
                     st.session_state['updatedIndex'] = updatedIndex
                     print("updated Index: " + str(updatedIndex))
-                    self.tauschearray()
-                    #update den neuen index zum vergleichen mit der zahl davor
+                    self.tauschearray()  
                     self.openTauschDialog()
                     return st.info("nice")
                 elif result == "beginning of list":
-                     st.info("Der Listenanfang ist erreicht")
+                    st.info("Der Listenanfang ist erreicht")
                 elif result == "wrong swap max":
-                     st.info("Die Zahl ... ist größer als ...")
+                    st.info("Die Zahl ... ist größer als ...")
                 elif result == "wrong swap":
-                     st.info("Das stimmt leider nicht")
+                    st.info("Das stimmt leider nicht")
 
         if st.button("Korrekt eingeordnet?"):
             if self.tutor.isAtCorrectPosition(updatedIndex, currentArray):
-                #wenn korrekt sortedarea wird inkrementiert
-                #self.resetSelectedIndex()
+                # wenn korrekt sortedarea wird inkrementiert
+                # self.resetSelectedIndex()
                 st.session_state['selectedIndex1'] = -1
                 st.session_state['selectedIndex2'] = -1
                 st.session_state['updatedIndex'] = -1
                 st.session_state['sortareaindex'] += 1
                 st.session_state['orderingprocess'] = False
                 st.session_state['alreadypressed'] = False
+                st.session_state['triggeronetimererun'] = True
                 st.rerun()
             else:
                 st.info("Das Element ist noch nicht richtig eingeordnet")
         # ------------------------------------------------------------------------------------------------------------
-
-
