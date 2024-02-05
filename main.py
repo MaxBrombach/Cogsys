@@ -53,7 +53,7 @@ def explanation():
 def exercise():
     st.title("Insertion Sort")
     st.write("Sortiere die Liste, bis alle Elemente an der richtigen Stelle stehen. "
-             "Bereits sortierte Zahlen werden mit spizen Klammern, z.B. <Zahl> gekennzeichnet. Viel Spaß!")
+             "Bereits sortierte Zahlen werden mit spitzen Klammern, z.B. <Zahl> gekennzeichnet. Viel Spaß!")
     exp_header.empty()
     text.empty()
     explanation_button_box.empty()

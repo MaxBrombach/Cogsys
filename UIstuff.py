@@ -5,6 +5,7 @@ import numpy as np
 import Notification
 import logic
 import TutorModel
+import random
 
 
 
@@ -17,10 +18,17 @@ class UIInsertionsort:
         self.tutor = TutorModel.TutorModel()
         self.initializeSessionstates()
 
+    def rand_array(self):
+        list = []
+        while len(list) != 5:
+            random_number = random.randint(1,10)
+            if random_number not in list:
+                list.append(random_number)
+        return list
 
     def initializeSessionstates(self):
         if 'alreadypressed' not in st.session_state:
-            st.session_state['startarray'] = [2, 4, 3, 8, 1]
+            st.session_state['startarray'] = self.rand_array()
             st.session_state['sortareaindex'] = 0
             st.session_state['alreadypressed'] = False
             st.session_state['buttonarray'] = np.zeros(5, dtype=bool)
@@ -168,7 +176,7 @@ class UIInsertionsort:
                     updatedIndex = updatedIndex - 1
                     st.session_state['updatedIndex'] = updatedIndex
                     print("updated Index: " + str(updatedIndex))
-                    self.tauschearray() # todo übergebe die indize zum tauschen (momentan wird nur das 1. und 2. element getauscht, alles andere wird missachtet)
+                    self.tauschearray()
                     #update den neuen index zum vergleichen mit der zahl davor
                     self.openTauschDialog()
                     return st.info("nice")

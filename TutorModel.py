@@ -1,9 +1,6 @@
 import numpy as np
 import streamlit as st
 import Usermodel
-import CustomExceptions
-
-
 class TutorModel:
 
     def __init__(self):
@@ -56,7 +53,7 @@ class TutorModel:
             return "True"
 
         elif st.session_state['userModel'].maxTriesachieved():
-            raise "wrong swap max"
+            return "wrong swap max"
         else:
             return "wrong swap"
 
