@@ -23,7 +23,7 @@ class UIInsertionsort:
         return list
 
     def initializeSessionstates(self):
-        if 'alreadypressed' not in st.session_state:
+        if 'alreadypressed' not in st.session_state or 'finished_run' in st.session_state:
             st.session_state['startarray'] = self.rand_array()
             st.session_state['sortareaindex'] = 0
             st.session_state['alreadypressed'] = False
@@ -171,7 +171,8 @@ class UIInsertionsort:
         if selectedindex1 == -1 or selectedindex2 == -1:
             st.info('Wähle 2 Zahlen zum Tauschen')
         else:
-            st.info("Wahl: Stelle1 = " + str(selectedindex1) + " und Stelle2 = " + str(selectedindex2))
+            st.info("Wahl: Position " + str(selectedindex1 + 1) + " = Zahl  " + str(st.session_state['startarray'][selectedindex1]) +
+                    " und Position " + str(selectedindex2 + 1) + " = Zahl " + str(st.session_state['startarray'][selectedindex2]))
         # -------------------------------------------------------------------------------------------------------------
 
         if len(trueindx) == 2 or selectedindex1 != -1 or selectedindex2 != -1:
