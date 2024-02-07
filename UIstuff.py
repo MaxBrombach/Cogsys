@@ -168,7 +168,7 @@ class UIInsertionsort:
         selectedindex2 = st.session_state['selectedIndex2']
 
         # Ausgabe der momentan gewählten Zahlen (zum debuggen)
-        if selectedindex1 == -1 or selectedindex2 == -1:
+        if st.session_state['selectedIndex1'] == -1 or st.session_state['selectedIndex2'] == -1:
             st.info('Wähle 2 Zahlen zum Tauschen')
         else:
             st.info("Wahl: Position " + str(selectedindex1 + 1) + " = Zahl [" + str(st.session_state['startarray'][selectedindex1]) +
@@ -178,8 +178,7 @@ class UIInsertionsort:
         if len(trueindx) == 2 or selectedindex1 != -1 or selectedindex2 != -1:
             if st.button("Zahlen neu wählen"):
                 self.resetButtonarray()
-                st.session_state['selectedIndex1'] = -1
-                st.session_state['selectedIndex2'] = -1
+                self.reset_selected_index()
                 st.rerun()
 
         # Tauschprozess 'nach vorne'
@@ -198,6 +197,7 @@ class UIInsertionsort:
                     updatedIndex = updatedIndex - 1
                     st.session_state['updatedIndex'] = updatedIndex
                     print("updated Index: " + str(updatedIndex))
+                    self.reset_selected_index()
                     self.tauschearray()  
                     self.openTauschDialog()
                     return st.info("nice")
@@ -208,8 +208,7 @@ class UIInsertionsort:
             if self.tutor.isAtCorrectPosition(updatedIndex, currentArray, st.session_state['sortareaindex']):
                 # wenn korrekt sortedarea wird inkrementiert
                 # self.resetSelectedIndex()
-                st.session_state['selectedIndex1'] = -1
-                st.session_state['selectedIndex2'] = -1
+                self.reset_selected_index()
                 st.session_state['updatedIndex'] = -2
                 st.session_state['sortareaindex'] += 1
                 st.session_state['orderingprocess'] = False
@@ -218,5 +217,10 @@ class UIInsertionsort:
                 st.session_state['userModel'].reset_tries()
                 st.rerun()
             else:
-                st.warning("Das Element ist noch nicht richtig eingeordnet")
+                pass
+                #st.warning("Das Element ist noch nicht richtig eingeordnet")
         # ------------------------------------------------------------------------------------------------------------
+
+    def reset_selected_index(self):
+        st.session_state['selectedIndex1'] = -1
+        st.session_state['selectedIndex2'] = -1

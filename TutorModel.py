@@ -38,19 +38,24 @@ class TutorModel:
         if selected_index1 != current_index:
             st.session_state['userModel'].increaseAttempt()
             if st.session_state['userModel'].maxTriesachieved():
-                st.error("Falsche Wahl der Zahlen: Du musst die Zahlen an den Stellen " + str(current_index+1) + " sowie " + str(current_index+2) + " tauschen")
+                st.error("Falsche Wahl der Zahlen: Du musst die Zahlen an den Stellen " + str(current_index+1) + " sowie " + str(current_index+2) + " betrachten")
             elif st.session_state['userModel'].current_tries() == 1:
                 st.warning("Hast du eventuell noch die falschen Zahlen ausgewählt?")
             else:
                 st.warning(
-                    "Wahl der Zahlen zum tauschen war nicht ganz richtig, Momentan betrachtest du die Zahl an der Stelle " + str(
-                        current_index + 1))
+                    "Wahl der Zahlen zum tauschen war nicht ganz richtig, momentan betrachtest du die Zahl an der Stelle " + str(
+                        current_index + 2))
             return False
         elif new_list[selected_index1] > new_list[selected_index2]:
+            st.session_state['userModel'].reset_tries()
             return True
         else:
             st.session_state['userModel'].increaseAttempt()
-            st.warning("Die Zahl an der Stelle " + str(current_index + 1) + " ist bereits eingeordnet.")
+            if st.session_state['userModel'].maxTriesachieved():
+                st.error("Die Zahl an der Stelle " + str(current_index + 2) + " ist bereits eingeordnet.")
+            elif st.session_state['userModel'].current_tries() == 1:
+                st.warning("Das ist nicht ganz richtig, schau nochmal nach.")
+            else: st.warning("Sicher, dass du noch tauschen musst?")
             return False
 
     def isAtCorrectPosition(self, current_index, current_array, sorted_index):
@@ -76,6 +81,7 @@ class TutorModel:
             st.error("Die Zahl " + str(current_array[current_index + 1]) + " muss mit der Zahl " + str(
                 current_array[current_index]) + " getauscht werden")
         elif st.session_state['userModel'].current_tries() == 1:
-            st.warning("Sortiere die Zahl " + str(current_index + 1) + " bis es sich an der richtigen Stelle befindet")
-        else:
             st.warning("Sortiere das neue Element, bis es sich an der richtigen Stelle befindet.")
+        else:
+            st.warning("Sortiere die Zahl " + str(
+                current_array[current_index + 1]) + " bis es sich an der richtigen Stelle befindet")
